@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace FileTranslator.Core
+{
+    public class Translator
+    {
+        public void Translate(string inputPath, string outputPath)
+        {
+
+            var lines = File.ReadAllLines(inputPath);
+            var noBlankLines = lines.Where(line => !string.IsNullOrWhiteSpace(line));
+            var noBackslashes = noBlankLines.Select(line => line.Replace("\\", string.Empty));
+            File.WriteAllLines(outputPath, noBackslashes);
+            var alphabatized = noBackslashes.OrderBy(line => line);
+            var capitalize = alphabatized.Select(line => line.Substring(0, 1).ToUpper() + line.Substring(1));
+            var numbered = capitalize.Select((line, index) => (index + 1).ToString("0000") + "," + line);
+            var joined = string.Join(Environment.NewLine, numbered);
+            File.WriteAllText(outputPath, joined);
+
+
+
+            //throw new NotImplementedException();
+        }
+    }
+}

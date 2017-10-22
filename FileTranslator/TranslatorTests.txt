@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+using System.Reflection;
+using System.IO;
+
+namespace FileTranslator.Core.Tests
+{
+    public class TranslatorTests
+    {
+        [Fact]
+        public void FullCycleTest()
+        {
+            // Run translator (give both paths), write to temporary output
+            // Read expected output, and make sure perfectly matches temporary output
+            var inputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)) + "\\Input.txt";
+            var outputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)) + "\\Output.txt";
+            var expectedOutputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)) + "\\ExpectedOutput.txt";
+
+            var translator = new Translator();
+            translator.Translate(inputPath, outputPath);
+            var output = File.ReadAllText(outputPath);
+            var expectedOutput = File.ReadAllText(expectedOutputPath);
+            Assert.Equal(expectedOutput, output);
+
+
+
+        }
+    }
+}
